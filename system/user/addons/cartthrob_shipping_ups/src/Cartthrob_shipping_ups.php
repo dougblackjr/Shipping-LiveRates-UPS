@@ -674,4 +674,21 @@ class Cartthrob_shipping_ups extends ShippingPlugin
 
         return $cart_hash;
     }
+
+    public function get_shipping(): Money
+    {
+        $shipping = $this->core->cart->shippable_weight() * $this->plugin_settings('rate');
+        return ee('cartthrob:MoneyService')->toMoney($shipping);
+    }
+
+    public function plugin_settings($key, $default = false)
+    {
+        $settings = $this->core->store->config(get_class($this) . '_settings');
+
+        if ($key === false) {
+            return ($settings) ? $settings : $default;
+        }
+
+        return (isset($settings[$key])) ? $settings[$key] : $default;
+    }
 }
